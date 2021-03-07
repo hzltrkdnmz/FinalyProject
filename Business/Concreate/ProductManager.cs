@@ -18,6 +18,7 @@ namespace Business.Concreate
             _productDal = productDal;
         }
 
+        //AOP:bir methodun önünde,sonunda,hata verdiğinde çalışan kod parcacıklarını bu mimari ile yazarız [method] seklinde kullanılır.
         public IResult Add(Product product)
         {
             if (product.ProductName.Length < 2)
@@ -31,7 +32,10 @@ namespace Business.Concreate
 
         public IDataResult<List<Product>> GetAll()
         {
-           
+            if (DateTime.Now.Hour == 21)
+            {
+                return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
+            }
 
             return new SuccessDataResult<List<Product>>(_productDal.GetAll(),Messages.ProductsListed);
            

@@ -15,12 +15,51 @@ namespace WebAPI.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        [HttpGet]
-        public List<Product> Get()
+        //Loosely Coupled :soyuta bağlılık var manager değişse bile biz interface bağlı olduğumuz için etkilenmeyeceğiz.
+        IProductService _productService;
+        //IoC Container-- Inversion of Control
+
+
+
+        public ProductsController(IProductService productService)
         {
-            ProductManager productService = new ProductManager(new EfProductDal());
-            var result=productService.GetAll();
-            return result.Data;
+            _productService = productService;
+        }
+
+        [HttpGet("getall")]
+        public IActionResult GetAll()
+        {
+
+            var result = _productService.GetAll();
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        } 
+        [HttpGet("getbyid")]
+        public IActionResult GetById(int id)
+        {
+            var result = _productService.GetById(id);
+            if (result.Success)
+            {
+                return Ok(result);
+
+            }
+            return BadRequest(result);
+        }
+
+        [HttpPost("add")]
+        public IActionResult Add(Product product)
+        {
+            var result = _productService.Add(product);
+
+            if (result.Success)
+            {
+                return Ok(result);
+
+            }
+            return BadRequest(result);
         }
     }
 }
