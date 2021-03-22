@@ -1,9 +1,12 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concreate;
 using Entities.DTOs;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,11 +24,18 @@ namespace Business.Concreate
         //AOP:bir methodun önünde,sonunda,hata verdiğinde çalışan kod parcacıklarını bu mimari ile yazarız [method] seklinde kullanılır.
         public IResult Add(Product product)
         {
-            if (product.ProductName.Length < 2)
-            {
-                return new ErrorResult(Messages.ProductNameInvalid);
-            }
+            //validation: nesnenin yapısal olarak uygun olup  olmadığını kontrol eder.
+            //business codes:iş ihtiyaclarına uygunluk
+
+            //if (product.ProductName.Length < 2)
+            //{
+            //    return new ErrorResult(Messages.ProductNameInvalid);
+            //}
+
+            ValidationTool.Validate(new ProductValidator(), product);
+
             _productDal.Add(product);
+
 
             return new SuccessResult(Messages.ProductAdded);
         }
@@ -37,8 +47,8 @@ namespace Business.Concreate
                 return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
             }
 
-            return new SuccessDataResult<List<Product>>(_productDal.GetAll(),Messages.ProductsListed);
-           
+            return new SuccessDataResult<List<Product>>(_productDal.GetAll(), Messages.ProductsListed);
+
         }
 
         public IDataResult<List<Product>> GetAllByCategoryId(int id)

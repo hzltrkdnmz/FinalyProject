@@ -32,10 +32,10 @@ namespace WebAPI
             //Autofac,Ninject,CastleWindsor,StructureMap,LightInject,DryInject-->IoC Container
            
             services.AddControllers();
-            services.AddSingleton<IProductService,ProductManager>();//Arka planda referans olusturur. Iporductservice istenirse Productmanager oluştur.
             //Veri tutlmayacaksa singleton kullanılır.
             //örn sepet işlemlerinde kullanılmamlı.
-            services.AddSingleton<IProductDal, EfProductDal>();
+            //services.AddSingleton<IProductService,ProductManager>();//Arka planda referans olusturur. Iporductservice istenirse Productmanager oluştur.        
+            //services.AddSingleton<IProductDal, EfProductDal>();
 
         }
 
