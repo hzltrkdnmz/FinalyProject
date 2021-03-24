@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -22,6 +23,8 @@ namespace Business.Concreate
         }
 
         //AOP:bir methodun önünde,sonunda,hata verdiğinde çalışan kod parcacıklarını bu mimari ile yazarız [method] seklinde kullanılır.
+
+        [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
             //validation: nesnenin yapısal olarak uygun olup  olmadığını kontrol eder.
@@ -32,7 +35,7 @@ namespace Business.Concreate
             //    return new ErrorResult(Messages.ProductNameInvalid);
             //}
 
-            ValidationTool.Validate(new ProductValidator(), product);
+            //ValidationTool.Validate(new ProductValidator(), product);
 
             _productDal.Add(product);
 
